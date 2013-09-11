@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>来聊天！</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap/bootstrap.min.css">
+  	<link rel="stylesheet" type="text/css" href="../lib/bootstrap/bootstrap-responsive.min.css">
+  	<link rel="stylesheet" type="text/css" href="../lib/flatui/flat-ui.css">
+
+  	<style type="text/css">
+  		.chat-content {
+  			height: 500px;
+  			overflow: scroll;
+  			margin-top: 53px;
+  			font-size: 1.5em;
+  			line-height: 2em;
+  		}
+  		.chat-item {
+  			margin:5px;
+  		}
+  		.chat-item span {
+  			display: inline-block;
+  			padding: 5px;
+  			border-radius: 5px;
+  		}
+  		.chat-request {
+  			text-align: right;
+  		}
+  		.chat-responce span {
+  			background: #1ABC9C;
+  			color: #fff;
+  		}
+  		.chat-request span {
+  			background: #ECF0F1;
+  			color: #000;
+  		}
+  		.chat-input {
+  			margin-top: 10px;
+  		}
+  	</style>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top" id="chat-header">
+		<div class="navbar-inner">
+			<div class="container">
+				<ul class="nav">
+					<li><a>Guard</a></li>
+					<li><a>我们聊聊吧</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container chat-content" id="chat-content">
+		<div class="tooltip fade top in" style="top: -96px; left: 0px; display: block;"><div class="tooltip-arrow"></div><div class="tooltip-inner">Here is the sample of talltooltip that contains three lines or more. More.</div></div>
+	</div>
+
+	<div class="container chat-input navbar-fixed-bottom" id="chat-input">
+		<textarea class='span12' id='chat-input-text'></textarea>
+	</div>
+
+	<script type="text/javascript" src="../lib/flatui/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../lib/bootstrap/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+		function resize () {
+			$('#chat-content').height($(window).height()-$('#chat-header').height() - $('#chat-input').height() - 10);
+		}
+		resize();
+		$(window).resize(resize);
+
+		function addRequest (text) {
+			$('<div class="chat-item chat-request">').append($('<span>').html(text)).appendTo($('#chat-content'));
+		}
+
+		function addResponse (text) {
+			$('<div class="chat-item chat-responce">').append($('<span>').html(text)).appendTo($('#chat-content'));
+		}
+
+		function sendRequest (text, callback) {
+			$.getJSON('../q', {
+					text: text,
+				},
+				function (data) {
+					callback(data);
+				});
+		}
+		$('#chat-input-text').keydown(function(e){
+			if (13 === e.keyCode) {
+				var text = $(this).val();
+				e.preventDefault();
+				$(this).val('');
+				addRequest(text);
+				sendRequest(text, function(data) {
+					if (data && data.response) {
+						addResponse(data.response);
+					}
+				});
+			}
+		});
+	</script>
+</body>
+</html>
