@@ -73,10 +73,12 @@
 
 		function addRequest (text) {
 			$('<div class="chat-item chat-request">').append($('<span>').html(text)).appendTo($('#chat-content'));
+			$('#chat-content').scrollTop($('#chat-content').height());
 		}
 
 		function addResponse (text) {
 			$('<div class="chat-item chat-responce">').append($('<span>').html(text)).appendTo($('#chat-content'));
+			$('#chat-content').scrollTop($('#chat-content').height());
 		}
 
 		function sendRequest (text, callback) {
